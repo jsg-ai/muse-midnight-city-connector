@@ -1,0 +1,22 @@
+[Unit]
+Description=Midnight City Muse connector API facade
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/opt/midnight-api
+ExecStart=/usr/bin/python3 /opt/midnight-api/midnight_api.py
+Environment=MIDNIGHT_API_PORT=8799
+Environment=MIDNIGHT_AUDIT=/var/log/midnight-api/audit.jsonl
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log/midnight-api
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Midnight City Connector - Midnight City Connector by HyperKind</title>
+<link rel="stylesheet" href="/style.css"><link rel="icon" href="/icon.svg" type="image/svg+xml">
+<meta name="description" content="Midnight City Connector for the Midnight City Muse connector, operated by HyperKind.">
+</head><body><main>
+<nav><a href="/">Home</a><a href="/apidocs/">API docs</a><a href="/support">Support</a><a href="/contact">Contact</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>
+
+<p class="tag">HyperKind</p>
+<h1>Play Midnight City from Muse</h1>
+<p>An open-source connector that lets your Muse agent check on and play your
+Midnight City character through the game's public API - read-first by default,
+with game actions, in-game value transfers, and wallet operations kept in
+separate, explicit trust tiers.</p>
+
+<div class="card"><h2>How it stays safe</h2>
+<table>
+<tr><th>Tier 0</th><td>Public reads (leaderboards, merchants). No account needed.</td></tr>
+<tr><th>Tier 1</th><td>Your agent's state. Your own Midnight City token is passed per request and never stored.</td></tr>
+<tr><th>Tier 2</th><td>Game actions (move, work, gather, craft, eat, sleep). One at a time, outcome verified, rate limited.</td></tr>
+<tr><th>Tier 3</th><td>In-game value (trades, crystal transfers). Every call needs your explicit confirmation of the exact merchant, item, and quantity.</td></tr>
+<tr><th>Tier 4</th><td>On-chain wallet operations, testnet only (Midnight Preview, Cardano Preprod), through scoped expiring handles. The agent never sees a seed phrase or private key. Not part of the hosted API in v1.</td></tr>
+</table></div>
+
+<div class="card"><h2>What you need</h2>
+<p>A Midnight City account and an agent. Connect from Muse and the connector
+uses your own account credentials - HyperKind never holds them.</p>
+<p class="dim">Networks: Preview and Preprod only. Mainnet is blocked by design.
+Testnet tokens have no monetary value.</p></div>
+
+<div class="card"><h2>Open source</h2>
+<p>MIT licensed and open source. Code, security notes, and evaluation suite:
+<a href="https://github.com/jsg-ai/muse-midnight-city-connector">github.com/jsg-ai/muse-midnight-city-connector</a>.</p></div>
+<footer><a href="/contact">Contact HyperKind</a>.<br>
+This is a community-built connector for the public Midnight City API. It is not affiliated with or endorsed by the Midnight City team; a permission request to the team is in progress.</footer>
+</main></body></html>

@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>API Documentation - Midnight City Connector by HyperKind</title>
+<link rel="stylesheet" href="/style.css"><link rel="icon" href="/icon.svg" type="image/svg+xml">
+<meta name="description" content="API Documentation for the Midnight City Muse connector, operated by HyperKind.">
+</head><body><main>
+<nav><a href="/">Home</a><a href="/apidocs/">API docs</a><a href="/support">Support</a><a href="/contact">Contact</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>
+
+<p class="tag">API Documentation</p><h1>API documentation</h1>
+<p>Base URL: <code>https://midnight.hyperkind.net/api/</code><br>
+Machine-readable spec: <a href="/api/openapi.json">/api/openapi.json</a> (OpenAPI 3.1).</p>
+<h2>Access requirements</h2>
+<p>A Midnight City account is needed for authenticated routes. Public routes
+need no account. You supply your own Midnight City owner token as a Bearer
+credential per request; it is never stored by this service.</p>
+<h2>Authentication flow</h2>
+<table>
+<tr><th>1</th><td><code>POST /api/claimable</code> with your owner token - list your claimable agents.</td></tr>
+<tr><th>2</th><td><code>POST /api/session</code> with your owner token and an agentId - the game issues a short-lived exclusive control lease.</td></tr>
+<tr><th>3</th><td>Reads and actions use the lease as the Bearer credential. The owner token is not used again.</td></tr>
+<tr><th>4</th><td><code>POST /api/session/release</code> with the lease when done.</td></tr>
+</table>
+<h2>Endpoints</h2>
+<table>
+<tr><th>GET /api/status</th><td>Tier 0. Service status, networks, upstream.</td></tr>
+<tr><th>GET /api/leaderboards</th><td>Tier 0. Public leaderboards.</td></tr>
+<tr><th>GET /api/merchants</th><td>Tier 0. Public merchants.</td></tr>
+<tr><th>GET /api/agents/{id}/context</th><td>Tier 1. Location, nearby, recent events. Verify action outcomes here.</td></tr>
+<tr><th>GET /api/agents/{id}/inventory</th><td>Tier 1.</td></tr>
+<tr><th>GET /api/agents/{id}/needs</th><td>Tier 1.</td></tr>
+<tr><th>GET /api/agents/{id}/progression</th><td>Tier 1. Skills and XP.</td></tr>
+<tr><th>POST /api/actions</th><td>Tier 2 game writes; Tier 3 value kinds require "confirm": true after your explicit approval of the exact merchant or recipient, item, and quantity. 12 actions per minute per caller. A submitted action is not a confirmed outcome: check context before submitting another.</td></tr>
+</table>
+<h2>Example</h2>
+<p><code>curl https://midnight.hyperkind.net/api/status</code></p>
+<p><code>curl -H "Authorization: Bearer YOUR_LEASE" https://midnight.hyperkind.net/api/agents/YOUR_AGENT/context</code></p>
+<p class="dim">Wallet (Tier 4) operations are deliberately not part of this hosted API in v1.</p>
+<footer><a href="/contact">Contact HyperKind</a>.<br>
+This is a community-built connector for the public Midnight City API. It is not affiliated with or endorsed by the Midnight City team; a permission request to the team is in progress.</footer>
+</main></body></html>

@@ -1,0 +1,345 @@
+{
+ "components": {
+  "schemas": {
+   "ActionRequest": {
+    "additionalProperties": true,
+    "properties": {
+     "agentId": {
+      "type": "string"
+     },
+     "confirm": {
+      "description": "Required true for Tier 3 (in-game value) actions, set only after the user approves the exact merchant or recipient, item, and quantity.",
+      "type": "boolean"
+     },
+     "kind": {
+      "description": "Game action kind from the Tier 2 or Tier 3 allowlist.",
+      "type": "string"
+     }
+    },
+    "required": [
+     "kind"
+    ],
+    "type": "object"
+   },
+   "Error": {
+    "properties": {
+     "error": {
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "SessionRequest": {
+    "properties": {
+     "agentId": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "agentId"
+    ],
+    "type": "object"
+   }
+  },
+  "securitySchemes": {
+   "leaseToken": {
+    "description": "Short-lived exclusive control-session lease returned by POST /session. Held by the caller in memory only.",
+    "scheme": "bearer",
+    "type": "http"
+   },
+   "ownerToken": {
+    "description": "The user's own Midnight City owner API token (MCITY_API_TOKEN). Used once to mint a control session; never stored by this service.",
+    "scheme": "bearer",
+    "type": "http"
+   }
+  }
+ },
+ "info": {
+  "contact": {
+   "name": "HyperKind Support",
+   "url": "https://midnight.hyperkind.net/contact"
+  },
+  "description": "Community-built connector facade for the public Midnight City observer API, operated by HyperKind for use with Muse. Read routes are public. Authenticated routes use the caller's own Midnight City credentials, passed per request and never stored. Networks: Midnight Preview and Cardano Preprod only; mainnet is blocked. Wallet (on-chain) operations are not part of this API surface in v1.",
+  "license": {
+   "name": "MIT",
+   "url": "https://github.com/jsg-ai/muse-midnight-city-connector"
+  },
+  "title": "Midnight City Connector API (HyperKind)",
+  "version": "0.1.0"
+ },
+ "openapi": "3.1.0",
+ "paths": {
+  "/actions": {
+   "post": {
+    "description": "One action at a time. A submitted action is not a confirmed outcome; verify via GET /agents/{agentId}/context before submitting another. Tier 2 kinds (move, work, gather, craft, eat, sleep, speak, combat) need no confirmation flag. Tier 3 kinds (trade, send-crystal, contract delivery, buy, sell) are rejected with 428 unless the body carries confirm:true, which the client must set only after the user approves the exact merchant or recipient, item, and quantity. Rate limited to 12 actions per minute per caller.",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ActionRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Action accepted by the game (verify outcome via context)."
+     },
+     "401": {
+      "description": "Lease missing."
+     },
+     "403": {
+      "description": "Action kind not on the allowlist."
+     },
+     "428": {
+      "description": "Tier 3 action without user confirmation."
+     },
+     "429": {
+      "description": "Rate limited."
+     }
+    },
+    "security": [
+     {
+      "leaseToken": []
+     }
+    ],
+    "summary": "Submit one game action",
+    "x-muse-classification": "sensitive-write"
+   }
+  },
+  "/agents/{agentId}/context": {
+   "get": {
+    "parameters": [
+     {
+      "in": "path",
+      "name": "agentId",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Current context: location, nearby, recent events. Verify action outcomes here."
+     },
+     "401": {
+      "description": "Lease missing."
+     }
+    },
+    "security": [
+     {
+      "leaseToken": []
+     }
+    ],
+    "summary": "Agent world context",
+    "x-muse-classification": "read"
+   }
+  },
+  "/agents/{agentId}/inventory": {
+   "get": {
+    "parameters": [
+     {
+      "in": "path",
+      "name": "agentId",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Inventory contents."
+     },
+     "401": {
+      "description": "Lease missing."
+     }
+    },
+    "security": [
+     {
+      "leaseToken": []
+     }
+    ],
+    "summary": "Agent inventory",
+    "x-muse-classification": "read"
+   }
+  },
+  "/agents/{agentId}/needs": {
+   "get": {
+    "parameters": [
+     {
+      "in": "path",
+      "name": "agentId",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Needs snapshot."
+     },
+     "401": {
+      "description": "Lease missing."
+     }
+    },
+    "security": [
+     {
+      "leaseToken": []
+     }
+    ],
+    "summary": "Agent needs (hunger, energy, health)",
+    "x-muse-classification": "read"
+   }
+  },
+  "/agents/{agentId}/progression": {
+   "get": {
+    "parameters": [
+     {
+      "in": "path",
+      "name": "agentId",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Skill levels and XP."
+     },
+     "401": {
+      "description": "Lease missing."
+     }
+    },
+    "security": [
+     {
+      "leaseToken": []
+     }
+    ],
+    "summary": "Agent skill progression",
+    "x-muse-classification": "read"
+   }
+  },
+  "/claimable": {
+   "post": {
+    "responses": {
+     "200": {
+      "description": "Claimable agents for the token's account."
+     },
+     "401": {
+      "description": "Owner token missing."
+     }
+    },
+    "security": [
+     {
+      "ownerToken": []
+     }
+    ],
+    "summary": "List agents claimable by the caller's account",
+    "x-muse-classification": "read"
+   }
+  },
+  "/leaderboards": {
+   "get": {
+    "parameters": [
+     {
+      "in": "query",
+      "name": "board",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Leaderboard data from the public observer API. No authentication."
+     }
+    },
+    "summary": "Public leaderboards",
+    "x-muse-classification": "read"
+   }
+  },
+  "/merchants": {
+   "get": {
+    "responses": {
+     "200": {
+      "description": "Merchants from the public observer API. No authentication."
+     }
+    },
+    "summary": "Public merchant list",
+    "x-muse-classification": "read"
+   }
+  },
+  "/session": {
+   "post": {
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SessionRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Lease details issued by the game. The lease, not the owner token, is used for subsequent calls."
+     },
+     "400": {
+      "description": "agentId missing."
+     },
+     "401": {
+      "description": "Owner token missing."
+     }
+    },
+    "security": [
+     {
+      "ownerToken": []
+     }
+    ],
+    "summary": "Open an exclusive control session (lease) for one agent",
+    "x-muse-classification": "write"
+   }
+  },
+  "/session/release": {
+   "post": {
+    "responses": {
+     "200": {
+      "description": "Session released."
+     },
+     "401": {
+      "description": "Lease missing."
+     }
+    },
+    "security": [
+     {
+      "leaseToken": []
+     }
+    ],
+    "summary": "Release the control session",
+    "x-muse-classification": "write"
+   }
+  },
+  "/status": {
+   "get": {
+    "responses": {
+     "200": {
+      "description": "Service is up; reports networks and upstream."
+     }
+    },
+    "summary": "Service status",
+    "x-muse-classification": "read"
+   }
+  }
+ },
+ "servers": [
+  {
+   "url": "https://midnight.hyperkind.net/api"
+  }
+ ]
+}

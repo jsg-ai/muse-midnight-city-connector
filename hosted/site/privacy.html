@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacy Policy - Midnight City Connector by HyperKind</title>
+<link rel="stylesheet" href="/style.css"><link rel="icon" href="/icon.svg" type="image/svg+xml">
+<meta name="description" content="Privacy Policy for the Midnight City Muse connector, operated by HyperKind.">
+</head><body><main>
+<nav><a href="/">Home</a><a href="/apidocs/">API docs</a><a href="/support">Support</a><a href="/contact">Contact</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>
+
+<p class="tag">Privacy Policy</p><h1>Privacy Policy</h1>
+<p class="dim">Effective 2026-10-15. Operator: HyperKind.</p>
+<h2>What the connector processes</h2>
+<p>When you use the connector, requests pass through our API facade at
+midnight.hyperkind.net to the Midnight City public API at midnight.city.</p>
+<table>
+<tr><th>Your Midnight City token</th><td>Received per request in an Authorization header, held in memory only for that request, used once to open a game session or read claimable agents. Never stored, never logged, never sent anywhere except midnight.city.</td></tr>
+<tr><th>Control-session lease</th><td>Issued by the game; held by your client, in memory. Our server sees it per request and does not store it.</td></tr>
+<tr><th>Game data</th><td>Your agent's state, inventory, and actions pass through to and from the game. We do not keep copies.</td></tr>
+<tr><th>Audit log</th><td>Timestamp, route, trust tier, and outcome status only - no credentials, no game content. Kept 30 days for abuse and reliability review, then deleted.</td></tr>
+<tr><th>Contact-form messages</th><td>What you type into the form (name, optional reply email, topic, message) is stored in a database on our server until we have dealt with it. The sender IP is stored only as a hash, for spam control.</td></tr>
+</table>
+<h2>What we do not do</h2>
+<p>No advertising, no analytics trackers on this site, no sale or sharing of
+personal data, no custody of wallet keys or seed phrases at any tier.</p>
+<h2>Who else processes data</h2>
+<p>Midnight City (the game, upstream of every request) and Meta Muse (the
+client you connect from), under their own policies.</p>
+<h2>Your choices</h2>
+<p>Stop using the connector at any time; revoke your Midnight City token in the
+game to cut access immediately. For deletion requests covering anything we hold
+(contact-form messages, audit entries), use the <a href="/contact">contact form</a>.</p>
+<footer><a href="/contact">Contact HyperKind</a>.<br>
+This is a community-built connector for the public Midnight City API. It is not affiliated with or endorsed by the Midnight City team; a permission request to the team is in progress.</footer>
+</main></body></html>
